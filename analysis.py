@@ -4,13 +4,13 @@
 import deepcopy
 import textblob
 
-import mq
 import db
+import queue
 
-def work():
-    blobber = textblob.Blobber()
-    tweets = map(blobber, mq.pop())
-    db.save(map(analyze,tweets))
+to_blob = textblob.Blobber()
+
+def work(tweet):
+    return db.save(analyze(to_blob(tweet)))
 
 def analyze(blob):
     blob = blobber(tweet)
@@ -18,7 +18,7 @@ def analyze(blob):
     result['sentiment'] = blob.sentiment
     return result
   
+QUEUE_NAME = 'analyze_this'
+
 if __name__ == '__main__':
-    while True:
-        work()
-        
+    queue.work(QUEUE_NAME)
