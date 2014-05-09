@@ -8,17 +8,12 @@ import json
 import config
 
 def get_host():
-    return os.environ.get('CLOUDANT_URL') or config.load()['COUCH']
+    return config.load()get('COUCH') or os.environ.get('CLOUDANT_URL') or 'http://localhost:5984'
 
-def save(result, id_=None):
-    if id_: result['_id'] = id_
-    if 'datetime' in result: result['datetime'] = str(result['datetime'])
-    return requests.post(get_host() + '/', data=json.dumps(result))
+def save(result):
+    return requests.post(get_host()+'/tweets', data=json.dumps(result))
   
-def load_summary():
-    pass
-  
-def load_latest():
-    pass
+def load_latest(since_datetime):
+    return requests.get(get_host()+'') # TODO: index
   
   
