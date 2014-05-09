@@ -4,3 +4,4 @@ flask
 redis
 pyyaml
 rq
+tweepy

@@ -1,24 +1,32 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import tweepy
+
 import config
 import queue
 import analysis
 
-def listen():
-    tweets = poll()
-    return map(enqueue, tweets)
+def listen(twitter, since_id=None):
+    tweets = twitter.search('#PyConAPAC',since_id=since_id)
+    map(enqueue, tweets))
+    return tweets.since_id
   
-def poll():
-    pass
+def get_twitter():
+    credentials = config.load().get('TWITTER')
+    auth = tweepy.OAuthHandler(credentials.get('KEY'), 
+                               credentials.get('KEY_SECRET'))
+    auth.set_access_token(credentials.get('TOKEN'), 
+                          credentials.get('TOKEN_SECRET'))
+    return tweepy.API(auth)
   
 def enqueue(tweet):
     return (queue.get_queue(analysis.QUEUE_NAME)
             .enqueue(analysis.work, tweet))
   
 if __name__ == '__main__':
-    import time
-  
+    twitter = get_twitter()
+    since_id = None
     while True:
-        if not listen():
-            time.sleep(10)
+        since_id = listen(twitter, since_id)
+        

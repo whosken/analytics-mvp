@@ -7,7 +7,7 @@ import rq
 import config
 
 def get_redis():
-    return redis.from_url(config.load().get('REDIS_URL') or 'redis://localhost:6379')
+    return redis.from_url(config.load().get('REDIS') or os.environ.get('REDISTOGO_URL') or 'redis://localhost:6379')
   
 REDIS = get_redis()
 
@@ -18,3 +18,4 @@ def work(*listen):
     with rq.Connection(REDIS):
         worker = rq.Worker(map(rq.Queue,listen))
         worker.work()
+        
