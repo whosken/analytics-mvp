@@ -17,3 +17,4 @@ To execute the code, config.yaml should be populated with appropriate credential
 - Redis host url (Heroku addon RedisToGo)
 - CouchDB host url (Heroku addon Cloudant)
 - Twitter Developer credentials
+- IronIO Token and Project ID
