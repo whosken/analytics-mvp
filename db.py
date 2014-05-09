@@ -14,6 +14,6 @@ def save(*results):
     return requests.post(get_host()+'/tweets', data=json.dumps(results))
   
 def load_latest(since_datetime):
-    return requests.get(get_host()+'') # TODO: index
-  
+    return requests.get(get_host()+'/_design/realtime/_view/sentiments',
+                        params={'startkey':since_datetime}) # TODO: index
   
