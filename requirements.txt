@@ -3,3 +3,4 @@ textblob
 flask
 redis
 pyyaml
+rq

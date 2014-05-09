@@ -1,29 +1,24 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import config
+import deepcopy
+import textblob
+
 import mq
 import db
 
 def work():
-    tweets = mq.pop()
+    blobber = textblob.Blobber()
+    tweets = map(blobber, mq.pop())
     db.save(map(analyze,tweets))
 
-def analyze(tweet):
-    pass
+def analyze(blob):
+    blob = blobber(tweet)
+    result = copy.deepcopy(tweet)
+    result['sentiment'] = blob.sentiment
+    return result
   
-
-import textblob
-import redis
-import cPickle
-  
-def train():
-    pass
-  
-def save(model):
-    pass
-  
-def load():
-    pass
-  
-  
+if __name__ == '__main__':
+    while True:
+        work()
+        
