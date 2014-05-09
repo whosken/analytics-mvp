@@ -6,11 +6,10 @@ import tweepy
 import config
 import queue
 import analysis
-import db
 
 def listen(twitter, since_id=None):
     tweets = twitter.search('#PyConAPAC',since_id=since_id)
-    db.save({'docs':map(enqueue, tweets)})
+    queue.push(tweets)
     return tweets.since_id
   
 def get_twitter():
@@ -20,10 +19,6 @@ def get_twitter():
     auth.set_access_token(credentials.get('TOKEN'), 
                           credentials.get('TOKEN_SECRET'))
     return tweepy.API(auth)
-  
-def enqueue(tweet):
-    return (queue.get_queue(analysis.QUEUE_NAME)
-            .enqueue(analysis.work, tweet))
   
 if __name__ == '__main__':
     twitter = get_twitter()

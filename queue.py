@@ -1,21 +1,22 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import redis
-import rq
+import iron_mq
+import json
 
 import config
 
-def get_redis():
-    return redis.from_url(config.load().get('REDIS') or os.environ.get('REDISTOGO_URL') or 'redis://localhost:6379')
-  
-REDIS = get_redis()
+MQ = iron_mq.IronMQ()
 
-def get_queue(queue_name):
-    return rq.Queue(queue_name,connection=REDIS)
+def get_queue(queue_name=None):
+    return MQ.queue(queue_name or 'analyze_this')
+
+def push(*messages):
+    return get_queue().post(messages)
+
+def pop(max=10):
+    queue = get_queue()
+    messages = queue.get(max)['messages']
+    delete_messages = lambda : queue.delete_multiple(*[m['id'] for m in messages])
+    return [json.loads(m) for m in messages], delete_messages
   
-def work(*listen):
-    with rq.Connection(REDIS):
-        worker = rq.Worker(map(rq.Queue,listen))
-        worker.work()
-        

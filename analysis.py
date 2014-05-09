@@ -5,8 +5,13 @@ import textblob
 import datetime
 
 import queue
+import db
 
 to_blob = textblob.Blobber()
+
+def work():
+    tweets,finished = queue.pop(100)
+    return db.save(map(analyze, tweets))
 
 def analyze(tweet):
     return {'text':tweet.text,
@@ -18,5 +23,6 @@ def analyze(tweet):
 QUEUE_NAME = 'analyze_this'
 
 if __name__ == '__main__':
-    queue.work(QUEUE_NAME)
+    while True:
+        work()
     

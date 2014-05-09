@@ -3,6 +3,6 @@ textblob
 flask
 redis
 pyyaml
-rq
+iron-mq
 tweepy
 gunicorn
