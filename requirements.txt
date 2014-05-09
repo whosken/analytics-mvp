@@ -5,3 +5,4 @@ redis
 pyyaml
 rq
 tweepy
+gunicorn
