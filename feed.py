@@ -5,7 +5,6 @@ import tweepy
 
 import config
 import queue
-import analysis
 
 def listen(twitter, since_id=None):
     tweets = twitter.search('#PyConAPAC',since_id=since_id)

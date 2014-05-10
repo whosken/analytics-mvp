@@ -25,8 +25,6 @@ def analyze(tweet):
                         tweet.created_at.second
                         ]
             }
-  
-QUEUE_NAME = 'analyze_this'
 
 if __name__ == '__main__':
     while True:
