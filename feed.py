@@ -7,7 +7,7 @@ import config
 import queue
 
 def listen(twitter, since_id=None):
-    tweets = twitter.search('#PyConAPAC',since_id=since_id)
+    tweets = twitter.search('#PyConAPAC OR #PyConAPAC2014',since_id=since_id)
     queue.push(tweets)
     return tweets.since_id
   
