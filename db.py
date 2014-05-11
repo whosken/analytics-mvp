@@ -1,21 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import requests
+import couchdbkit
 import os
 import json
 
 import config
-
-def get_host():
-    return config.load()get('COUCH') or os.environ.get('CLOUDANT_URL') or 'http://localhost:5984'
+  
+def get_db():
+    return couchdbkit.Server(config.load()get('COUCH') or os.environ.get('CLOUDANT_URL') or 'http://localhost:5984').get_or_create_db('tweets')
 
 def save(*results):
-    return requests.post(get_host()+'/tweets', data=json.dumps(results))
+    return get_db().bulk_save(results)
   
 def latest_sentiments(since_datetime):
-    response = requests.get(get_host()+'/_design/realtime/_view/sentiments',
-                            params={'startkey':json.dumps(since_datetime)}).json()
-    return response
-    
-  
+    return get_db().view('realtime/sentiments', startkey=since_datetime)

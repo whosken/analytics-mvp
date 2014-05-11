@@ -1,4 +1,4 @@
-requests
+couchdbkit
 textblob
 flask
 redis
