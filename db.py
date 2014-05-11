@@ -19,5 +19,5 @@ def save(*results):
     except couchdbkit.exceptions.BulkSaveError as error:
         print error
   
-def latest_sentiments(since_datetime):
+def latest_sentiments(since_datetime=None):
     return get_db().view('realtime/sentiments', startkey=since_datetime)

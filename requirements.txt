@@ -4,5 +4,5 @@ flask
 redis
 pyyaml
 iron-mq
-tweepy
-gunicorn
+twython
+tornado
