@@ -20,10 +20,11 @@ def sentiments(since_datetime=None):
     return flask.jsonify(sentiments=sentiments, nextUrl=next_url)
   
 def get_datetimekey():
-    return u';'.join(datetime.datetime.now().timetuple())
+    now_tuple = datetime.datetime.now().timetuple()
+    return u';'.join(map(unicode, now_tuple))
   
 def get_datetime_tuple(key):
-    return key.split(';')[:6]
+    return key.split(';')[:6] if key else None
   
 
 if __name__ == '__main__':
