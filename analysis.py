@@ -11,7 +11,8 @@ to_blob = textblob.Blobber()
 
 def work():
     tweets,finished = queue.pop(100)
-    return db.save(map(analyze, tweets))
+    db.save(*map(analyze, tweets))
+    finished()
 
 def analyze(tweet):
     return {'text':tweet.text,

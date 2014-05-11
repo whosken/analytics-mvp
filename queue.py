@@ -7,19 +7,25 @@ import json
 import config
 
 def get_client():
-    credentials = config.load().get('IRONIO') or {}
     return iron_mq.IronMQ(project_id=config.get('IRONIO.PROJECT'),
-                    token=config.get('IRONIO.TOKEN'))
+                          token=config.get('IRONIO.TOKEN'))
 
 def get_queue(queue_name=None):
-    return MQ.queue(queue_name or 'analyze_this')
+    return get_client().queue(queue_name or 'analyze_this')
 
 def push(*messages):
-    return get_queue().post(messages)
+    return get_queue().post(*map(json.dumps, messages))
 
 def pop(max=10):
     queue = get_queue()
     messages = queue.get(max)['messages']
-    delete_messages = lambda : queue.delete_multiple(*[m['id'] for m in messages])
-    return [json.loads(m) for m in messages], delete_messages
+    message_ids = [m['id'] for m in messages]
+    delete_messages = lambda : map(queue.delete, message_ids)
+    return [m for m in map(try_json_loads, messages) if m], delete_messages
   
+def try_json_loads(text):
+    try:
+        return json.loads(text)
+    except TypeError as error:
+        print error
+    
