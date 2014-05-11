@@ -21,11 +21,4 @@ def pop(max=10):
     messages = queue.get(max)['messages']
     message_ids = [m['id'] for m in messages]
     delete_messages = lambda : map(queue.delete, message_ids)
-    return [m for m in map(try_json_loads, messages) if m], delete_messages
-  
-def try_json_loads(text):
-    try:
-        return json.loads(text)
-    except TypeError as error:
-        print error
-    
+    return [json.loads(m['body']) for m in messages], delete_messages

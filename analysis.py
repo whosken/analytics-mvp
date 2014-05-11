@@ -15,19 +15,19 @@ def work():
     finished()
 
 def analyze(tweet):
-    return {'text':tweet.text,
-            'sentiment':to_blob(tweet.text).sentiment,
-            '_id':tweet.id,
-            'datetime':[tweet.created_at.year,
-                        tweet.created_at.month,
-                        tweet.created_at.day,
-                        tweet.created_at.hour,
-                        tweet.created_at.minute,
-                        tweet.created_at.second
+    created_at = datetime.datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y')
+    return {'text':tweet['text'],
+            'sentiment':to_blob(tweet['text']).sentiment,
+            '_id':unicode(tweet['id']),
+            'datetime':[created_at.year,
+                        created_at.month,
+                        created_at.day,
+                        created_at.hour,
+                        created_at.minute,
+                        created_at.second
                         ]
             }
 
 if __name__ == '__main__':
     while True:
         work()
-    
