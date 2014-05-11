@@ -3,8 +3,7 @@
 
 import couchdbkit
 import couchdbkit.exceptions
-import os
-import json
+import collections
 
 import config
   
@@ -20,4 +19,8 @@ def save(*results):
         print error
   
 def latest_sentiments(since_datetime=None):
-    return get_db().view('realtime/sentiments', startkey=since_datetime)
+    counter = collections.Counter()
+    for r in get_db().view('realtime/sentiments', startkey=since_datetime, group=True):
+        counter.update(r['value'])
+    counter += collections.Counter()
+    return dict(counter)

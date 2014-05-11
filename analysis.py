@@ -42,5 +42,4 @@ if __name__ == '__main__':
     import time    
     while True:
         if not work():
-            print 'sleeping...'
             time.sleep(2)
