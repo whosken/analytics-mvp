@@ -6,12 +6,15 @@ import os
 import os.path
 import yaml
 
-def load(path=None, overwrite=None):
-    config = load_yaml(path)
-    overwrite = overwrite or os.environ.get('CONFIG')
-    if overwrite:
-        config.update(load_yaml(filename=overwrite))
-    return config
+def get(var, env_var=None, default=None):
+    return get_val(var) or os.environ.get(env_var) or default
+
+def get_val(var, _dict=None):
+    val = _dict or load_yaml()
+    for k in var.split('.'):
+        if type(val) is dict:
+            val = val.get(k)
+    return val
 
 default = 'config.yaml'
 def load_yaml(path=None, filename=None):

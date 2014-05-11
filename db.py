@@ -8,7 +8,9 @@ import json
 import config
   
 def get_db():
-    return couchdbkit.Server(config.load()get('COUCH') or os.environ.get('CLOUDANT_URL') or 'http://localhost:5984').get_or_create_db('tweets')
+    return (couchdbkit
+            .Server(config.get('COUCH','CLOUDANT_URL','http://localhost:5984'))
+            .get_or_create_db('tweets'))
 
 def save(*results):
     return get_db().bulk_save(results)

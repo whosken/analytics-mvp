@@ -8,8 +8,8 @@ import config
 
 def get_client():
     credentials = config.load().get('IRONIO') or {}
-    return iron_mq.IronMQ(project_id=credentials.get('PROJECT'),
-                    token=credentials.get('TOKEN'))
+    return iron_mq.IronMQ(project_id=config.get('IRONIO.PROJECT'),
+                    token=config.get('IRONIO.TOKEN'))
 
 def get_queue(queue_name=None):
     return MQ.queue(queue_name or 'analyze_this')

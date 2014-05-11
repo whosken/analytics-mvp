@@ -12,11 +12,10 @@ def listen(twitter, since_id=None):
     return tweets.since_id
   
 def get_twitter():
-    credentials = config.load().get('TWITTER')
-    auth = tweepy.OAuthHandler(credentials.get('KEY'), 
-                               credentials.get('KEY_SECRET'))
-    auth.set_access_token(credentials.get('TOKEN'), 
-                          credentials.get('TOKEN_SECRET'))
+    auth = tweepy.OAuthHandler(config.get('TWITTER.KEY','TWITTER_KEY'),
+                               config.get('TWITTER.SECRET','TWITTER_SECRET'))
+    auth.set_access_token(config.get('TWITTER.TOKEN','TWITTER_TOKEN'), 
+                          config.get('TWITTER.TOKEN_SECRET','TWITTER_TOKEN_SECRET'))
     return tweepy.API(auth)
   
 if __name__ == '__main__':
