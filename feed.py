@@ -23,5 +23,6 @@ class TwitterStreamer(twython.TwythonStreamer):
   
 if __name__ == '__main__':
     stream = get_streamer()
-    stream.statuses.filter(track='PyConAPAC,PyConAPAC2014')
+    while True:
+        stream.statuses.filter(track='PyConAPAC,PyConAPAC2014')
     
