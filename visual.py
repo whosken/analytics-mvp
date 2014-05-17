@@ -3,6 +3,7 @@
 
 import flask
 import datetime
+import os
 
 import db
 
@@ -34,6 +35,6 @@ if __name__ == '__main__':
     
     (tornado.httpserver
      .HTTPServer(tornado.wsgi.WSGIContainer(app))
-     .listen(5000))
+     .listen(os.environ.get('PORT') or 5000))
     tornado.ioloop.IOLoop.instance().start()
     
