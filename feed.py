@@ -15,7 +15,6 @@ def get_streamer():
   
 class TwitterStreamer(twython.TwythonStreamer):
     def on_success(self, data):
-        print '.'
         queue.push(data)
         
     def on_error(self, status_code, data):
