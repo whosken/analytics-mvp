@@ -18,7 +18,7 @@ def dashboard():
 def sentiments(since=None):
     since = get_datetime_tuple(since)
     sentiments, latest = db.latest_sentiments(since)
-    next_url = flask.url_for('sentiments',since=get_datetimekey(latest or since))
+    next_url = flask.url_for('sentiments',since=get_datetimekey(latest))
     return flask.jsonify(sentiments=sentiments, nextUrl=next_url)
   
 def get_datetimekey(latest):

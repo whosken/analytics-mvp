@@ -20,7 +20,7 @@ def save(*results):
   
 def latest_sentiments(since=None):
     counter = collections.Counter()
-    latest = None
+    latest = since
     for r in get_db().view('realtime/sentiments', 
                            startkey=since,
                            group_level=len(since) if since else 6):
