@@ -16,9 +16,10 @@ def get_val(var, _dict=None):
             val = val.get(k)
     return val
 
-default = 'config.yaml'
+default = 'dev.yaml'
 def load_yaml(path=None, filename=None):
     path = path or os.path.join(os.getcwd(), filename or default)
     logging.debug('Reading yaml from <{0}>'.format(path))
+    if not os.path.isfile(path): return
     with open(path) as file:
         return yaml.load(file.read())

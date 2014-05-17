@@ -15,6 +15,7 @@ def get_streamer():
   
 class TwitterStreamer(twython.TwythonStreamer):
     def on_success(self, data):
+        print '.'
         queue.push(data)
         
     def on_error(self, status_code, data):
@@ -24,5 +25,5 @@ class TwitterStreamer(twython.TwythonStreamer):
 if __name__ == '__main__':
     stream = get_streamer()
     while True:
-        stream.statuses.filter(track='PyConAPAC,PyConAPAC2014')
+        stream.statuses.filter(track='Godzilla')
     
