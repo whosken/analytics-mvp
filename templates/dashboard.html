@@ -138,15 +138,16 @@
         };
       };
       
-      var APIURI = 'poll/sentiments';
-      var updateApiUri = function(response){
-        APIURI = response.nextUrl;
-      };
-      
       var initGetRequestData = function(chartUpdate){
+        var apiUri = 'poll/sentiments';
+        var updateApiUri = function(response){
+          apiUri = response.nextUrl;
+        };
+        
         return function(){
+          console.log(apiUri);
           $.ajax({
-            url: APIURI,
+            url: apiUri,
             cache: false,
             success: [updateApiUri, chartUpdate]
           });

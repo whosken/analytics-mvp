@@ -18,9 +18,13 @@ def save(*results):
     except couchdbkit.exceptions.BulkSaveError as error:
         print error
   
-def latest_sentiments(since_datetime=None):
+def latest_sentiments(since=None):
     counter = collections.Counter()
-    for r in get_db().view('realtime/sentiments', startkey=since_datetime, group=True):
+    latest = None
+    for r in get_db().view('realtime/sentiments', 
+                           startkey=since,
+                           group_level=len(since) if since else 6):
         counter.update(r['value'])
+        latest = r['key']
     counter += collections.Counter()
-    return dict(counter)
+    return dict(counter), latest

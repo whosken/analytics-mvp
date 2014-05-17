@@ -13,19 +13,21 @@ app = flask.Flask(__name__)
 def dashboard():
     return flask.render_template('dashboard.html')
 
-@app.route('/poll/sentiments')
-@app.route('/poll/sentiments/<since_datetime>')
-def sentiments(since_datetime=None):
-    sentiments = db.latest_sentiments(get_datetime_tuple(since_datetime))
-    next_url = flask.url_for('sentiments',since_datetime=get_datetimekey())
+@app.route('/poll/sentiments/')
+@app.route('/poll/sentiments/<since>')
+def sentiments(since=None):
+    since = get_datetime_tuple(since)
+    sentiments, latest = db.latest_sentiments(since)
+    next_url = flask.url_for('sentiments',since=get_datetimekey(latest or since))
     return flask.jsonify(sentiments=sentiments, nextUrl=next_url)
   
-def get_datetimekey():
-    now_tuple = datetime.datetime.now().timetuple()
-    return u';'.join(map(unicode, now_tuple))
+def get_datetimekey(latest):
+    return u';'.join(map(unicode, latest))
   
 def get_datetime_tuple(key):
-    return key.split(';')[:6] if key else None
+    if key: return map(int, key.split(';'))
+    key = list(datetime.datetime.utcnow().timetuple()[:6])
+    return key
   
 
 if __name__ == '__main__':
@@ -37,4 +39,3 @@ if __name__ == '__main__':
      .HTTPServer(tornado.wsgi.WSGIContainer(app))
      .listen(os.environ.get('PORT') or 5000))
     tornado.ioloop.IOLoop.instance().start()
-    
