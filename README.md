@@ -14,7 +14,6 @@ _Demo lives on: <http://analytics-mvp.herokuapp.com>_
 
 To execute the code, config.yaml should be populated with appropriate credentials. These include:
 
-- Redis host url (Heroku addon RedisToGo)
 - CouchDB host url (Heroku addon Cloudant)
+- IronIO Token and Project ID (Heroku addon IronMQ)
 - Twitter Developer credentials
-- IronIO Token and Project ID
