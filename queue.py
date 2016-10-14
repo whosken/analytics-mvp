@@ -7,8 +7,8 @@ import json
 import config
 
 def get_client():
-    return iron_mq.IronMQ(project_id=config.get('IRONIO.PROJECT'),
-                          token=config.get('IRONIO.TOKEN'))
+    return iron_mq.IronMQ(project_id=config.get('IRONIO.PROJECT','IRON_MQ_PROJECT_ID'),
+                          token=config.get('IRONIO.TOKEN','IRON_MQ_TOKEN'))
 
 def get_queue(queue_name=None):
     return get_client().queue(queue_name or 'analyze_this')

@@ -25,4 +25,3 @@ if __name__ == '__main__':
     stream = get_streamer()
     while True:
         stream.statuses.filter(track='android')
-    
