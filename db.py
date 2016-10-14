@@ -1,30 +1,37 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import couchdbkit
-import couchdbkit.exceptions
-import collections
+import pymongo
+import pymongo.errors
 
 import config
-  
-def get_db():
-    return (couchdbkit
-            .Server(config.get('COUCH','CLOUDANT_URL','http://localhost:5984'))
-            .get_or_create_db('tweets'))
+
+HOST = config.get('MONGO','MONGODB_URI','mongodb://localhost:27017')
+DB_NAME = pymongo.uri_parser.parse_uri(HOST).get('database')
+COLLECTION_NAME = 'tweets'
+
+collection = pymongo.MongoClient(HOST)[DB_NAME][COLLECTION_NAME]
 
 def save(*results):
+    bulk = collection.initialize_unordered_bulk_op()
+    for result in results:
+        bulk.insert(result)
     try:
-        return get_db().bulk_save(results)
-    except couchdbkit.exceptions.BulkSaveError as error:
-        print error
-  
+        bulk.execute()
+    except pymongo.errors.BulkWriteError as error:
+        print error.details
+
 def latest_sentiments(since=None):
-    counter = collections.Counter()
     latest = since
-    for r in get_db().view('realtime/sentiments', 
-                           startkey=since,
-                           group_level=len(since) if since else 6):
-        counter.update(r['value'])
-        latest = r['key']
-    counter += collections.Counter()
-    return dict(counter), latest
+    pipeline = [
+        {'$match':{'datetime':{'$gte':since}}},
+        {'$group':{
+            '_id':'$sentiment',
+            'count':{'$sum':1},
+            'latest':{'$max':'$datetime'}
+            }}
+        ]
+    results = list(collection.aggregate(pipeline))
+    sentiments = {(r['_id'],r['count']) for r in results}
+    lastest = max(r['latest'] for r in results)
+    return sentiments, latest

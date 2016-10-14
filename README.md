@@ -14,6 +14,6 @@ _Demo lives on: <http://analytics-mvp.herokuapp.com>_
 
 To execute the code, config.yaml should be populated with appropriate credentials. These include:
 
-- CouchDB host url (Heroku addon Cloudant)
-- IronIO Token and Project ID (Heroku addon IronMQ)
+- MongoDB host url (or Heroku addon mLab)
+- IronIO Token and Project ID (or Heroku addon IronMQ)
 - Twitter Developer credentials

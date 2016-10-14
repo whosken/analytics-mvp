@@ -18,28 +18,22 @@ def work():
 
 def analyze(tweet):
     created_at = datetime.datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y')
-    sentiment = to_blob(tweet['text']).sentiment.polarity
+    blob = to_blob(tweet['text'])
     return {'text':tweet['text'],
-            'sentiment':get_sentiment(tweet['text']),
+            'sentiment':get_sentiment(blob),
             '_id':unicode(tweet['id']),
-            'datetime':[created_at.year,
-                        created_at.month,
-                        created_at.day,
-                        created_at.hour,
-                        created_at.minute,
-                        created_at.second
-                        ]
+            'datetime':created_at
             }
   
-def get_sentiment(text):
-    sentiment = to_blob(text).sentiment.polarity
+def get_sentiment(blob):
+    sentiment = blob.sentiment.polarity
     if sentiment > 0: return 'pos'
     if sentiment < 0: return 'neg'
     return 'neu'
 
     
 if __name__ == '__main__':
-    import time    
+    import time
     while True:
         if not work():
             time.sleep(2)
