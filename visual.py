@@ -31,14 +31,3 @@ def get_datetime_tuple(key):
     if key: return map(int, key.split(';'))
     key = list(datetime.datetime.utcnow().timetuple()[:6])
     return key
-  
-
-if __name__ == '__main__':
-    import tornado.wsgi
-    import tornado.httpserver
-    import tornado.ioloop
-    
-    (tornado.httpserver
-     .HTTPServer(tornado.wsgi.WSGIContainer(app))
-     .listen(os.environ.get('PORT') or 5000))
-    tornado.ioloop.IOLoop.instance().start()
