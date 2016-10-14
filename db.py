@@ -13,9 +13,9 @@ COLLECTION_NAME = 'tweets'
 collection = pymongo.MongoClient(HOST)[DB_NAME][COLLECTION_NAME]
 
 def save(*results):
-    bulk = collection.initialize_unordered_bulk_op()
+    bulk = collection.initialize_ordered_bulk_op()
     for result in results:
-        bulk.insert(result)
+        bulk.find({'_id':result['_id']}).upsert().replace_one(result)
     try:
         bulk.execute()
     except pymongo.errors.BulkWriteError as error:
