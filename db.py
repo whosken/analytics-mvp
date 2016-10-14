@@ -33,6 +33,8 @@ def latest_sentiments(since=None):
     if since:
         pipeline = [{'$match':{'datetime':{'$gte':since}}}] + pipeline
     results = list(collection.aggregate(pipeline))
+    if not results:
+        return {}, since
     sentiments = dict((r['_id'],r['count']) for r in results)
     lastest = max(r['latest'] for r in results)
     return sentiments, latest
