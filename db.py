@@ -24,13 +24,14 @@ def save(*results):
 def latest_sentiments(since=None):
     latest = since
     pipeline = [
-        {'$match':{'datetime':{'$gte':since}}},
         {'$group':{
             '_id':'$sentiment',
             'count':{'$sum':1},
             'latest':{'$max':'$datetime'}
             }}
         ]
+    if since:
+        pipeline = [{'$match':{'datetime':{'$gte':since}}}] + pipeline
     results = list(collection.aggregate(pipeline))
     sentiments = {(r['_id'],r['count']) for r in results}
     lastest = max(r['latest'] for r in results)

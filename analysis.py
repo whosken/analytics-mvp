@@ -12,18 +12,22 @@ to_blob = textblob.Blobber()
 def work():
     tweets,finished = queue.pop(100)
     if not tweets: return
-    db.save(*map(analyze, tweets))
+    db.save(*filter(None,map(analyze, tweets)))
     finished()
     return len(tweets)
 
 def analyze(tweet):
-    created_at = datetime.datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y')
-    blob = to_blob(tweet['text'])
-    return {'text':tweet['text'],
-            'sentiment':get_sentiment(blob),
-            '_id':unicode(tweet['id']),
-            'datetime':created_at
-            }
+    try:
+        created_at = datetime.datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y')
+        blob = to_blob(tweet['text'])
+        return {'text':tweet['text'],
+                'sentiment':get_sentiment(blob),
+                '_id':unicode(tweet['id']),
+                'datetime':created_at
+                }
+    except Exception as error:
+        print error
+        print tweet
   
 def get_sentiment(blob):
     sentiment = blob.sentiment.polarity
