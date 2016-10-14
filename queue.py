@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import iron_mq
-import requests
 import requests.exceptions
-requests.packages.urllib3.disable_warnings()
 
 import json
 
