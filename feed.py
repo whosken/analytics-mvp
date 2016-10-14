@@ -12,15 +12,16 @@ def get_streamer():
     token = config.get('TWITTER.TOKEN','TWITTER_TOKEN')
     token_secret = config.get('TWITTER.TOKEN_SECRET','TWITTER_TOKEN_SECRET')
     return TwitterStreamer(key, key_secret, token, token_secret)
-  
+
 class TwitterStreamer(twython.TwythonStreamer):
     def on_success(self, data):
         queue.push(data)
         
     def on_error(self, status_code, data):
         print status_code
-  
-  
+        print data
+
+
 if __name__ == '__main__':
     stream = get_streamer()
     while True:
