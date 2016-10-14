@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import iron_mq
+import requests
+import requests.exceptions
+requests.packages.urllib3.disable_warnings()
+
 import json
 
 import config
@@ -19,16 +23,17 @@ def push(*messages):
 
 def pop(max=10):
     queue = get_queue()
-    messages = queue.get(max)['messages']
-    message_ids = [m['id'] for m in messages]
+    messages = queue.reserve(max)['messages']
+    message_ids = [(m['id'],m['reservation_id']) for m in messages]
     delete_messages = get_delete_messages(queue, message_ids)
     return [json.loads(m['body']) for m in messages], delete_messages
 
 def get_delete_messages(queue, message_ids):
     def delete_messages():
-        for message_id in message_ids:
+        for message_id, reservation_id in message_ids:
             try:
-                queue.delete(message_id)
-            except Exception as error:
+                queue.delete(message_id, reservation_id)
+            except requests.exceptions.HTTPError as error:
                 print error
+                print error.response.text
     return delete_messages
