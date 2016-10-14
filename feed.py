@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import twython
+import requests
+
+requests.packages.urllib3.disable_warnings()
 
 import config
 import queue
@@ -15,7 +18,8 @@ def get_streamer():
 
 class TwitterStreamer(twython.TwythonStreamer):
     def on_success(self, data):
-        queue.push(data)
+        if 'created_at' in data:
+            queue.push(data)
         
     def on_error(self, status_code, data):
         print status_code
