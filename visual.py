@@ -6,12 +6,15 @@ import datetime
 import os
 
 import db
+import config
 
 app = flask.Flask(__name__)
 
 @app.route('/')
 def dashboard():
-    return flask.render_template('dashboard.html')
+    return flask.render_template(
+        'dashboard.html',
+        topic=config.get('TOPIC','TOPIC','python'))
 
 @app.route('/poll/sentiments/')
 @app.route('/poll/sentiments/<since>')
