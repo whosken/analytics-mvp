@@ -19,15 +19,16 @@ def dashboard():
 @app.route('/poll/sentiments/')
 @app.route('/poll/sentiments/<since>')
 def sentiments(since=None):
-    since = get_datetime_tuple(since)
+    since = get_datetime(since)
+    print since
     sentiments, latest = db.latest_sentiments(since)
     next_url = flask.url_for('sentiments',since=get_datetimekey(latest))
     return flask.jsonify(sentiments=sentiments, nextUrl=next_url)
   
 def get_datetimekey(latest):
-    return u';'.join(map(unicode, latest))
+    return u';'.join(map(unicode, latest.timetuple()[:6]))
   
-def get_datetime_tuple(key):
-    if key: return map(int, key.split(';'))
-    key = list(datetime.datetime.utcnow().timetuple()[:6])
-    return key
+def get_datetime(key):
+    if not key:
+        return datetime.datetime.now() - datetime.timedelta(hours=1)
+    return datatime.datetime(*map(int, key.split(';')))
