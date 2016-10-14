@@ -12,7 +12,7 @@ def get_client():
         token=config.get('IRONIO.TOKEN','IRON_MQ_TOKEN'))
         
 def get_queue():
-    return client.queue('analyze_this')
+    return get_client().queue('analyze_this')
 
 def push(*messages):
     return get_queue().post(*map(json.dumps, messages))
